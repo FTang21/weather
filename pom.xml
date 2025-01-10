@@ -16,6 +16,7 @@
         <module>search</module>
         <module>config</module>
         <module>university</module>
+        <module>school</module>
     </modules>
 
     <groupId>com.example</groupId>
