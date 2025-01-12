@@ -32,9 +32,9 @@ public class UserController {
         this.authenticationManager = authenticationManager;
     }
 
-    @GetMapping("/hello")
-    public String helloWorld() {
-        return "Hello World";
+    @PostMapping("/addNewUser")
+    public ResponseEntity<String> addNewUser(@RequestBody User user) {
+        return ResponseEntity.ok(userService.addUser(user));
     }
 
     @PostMapping("/login")

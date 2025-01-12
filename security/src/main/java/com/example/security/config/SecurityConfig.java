@@ -38,11 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth/**").permitAll() // Allow unauthenticated access to /auth/**
-                .anyRequest().authenticated() // Any other request needs authentication
+                .antMatchers("/security/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless session for JWT authentication
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
 
