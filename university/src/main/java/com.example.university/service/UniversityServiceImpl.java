@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -21,30 +22,30 @@ public class UniversityServiceImpl implements UniversityService {
         this.restTemplate = restTemplate;
     }
 
-    public Map<String, List<String>> getAllUniversities() {
+    public List<String> getAllUniversities() {
         University[] universities = restTemplate.getForObject(API_URL, University[].class);
         return Arrays.stream(universities)
-                .collect(Collectors.groupingBy(University::getCountry,
-                        Collectors.mapping(University::getName, Collectors.toList())));
+                .map(University::getName)
+                .collect(Collectors.toList());
     }
 
-    public Map<String, List<String>> getUniversitiesByCountries(List<String> countries) {
-        List<CompletableFuture<Map<String, List<String>>>> futures = countries.stream()
-            .map(country -> CompletableFuture.supplyAsync(() -> getUniversitiesByCountry(country)))
-            .collect(Collectors.toList());
-        Map<String, List<String>> universitiesByCountries = new HashMap<>();
-        futures.forEach(future -> universitiesByCountries.putAll(future.join()));
-        return universitiesByCountries;
+    public List<String> getUniversitiesByCountries(List<String> countries) {
+        List<CompletableFuture<List<String>>> futures = countries.stream()
+                .map(country -> CompletableFuture.supplyAsync(() -> getUniversitiesByCountry(country)))
+                .collect(Collectors.toList());
+        List<String> allUniversityNames = futures.stream()
+                .flatMap(future -> future.join().stream())
+                .collect(Collectors.toList());
+        return allUniversityNames;
     }
 
-    public Map<String, List<String>> getUniversitiesByCountry(String country) {
+    public List<String> getUniversitiesByCountry(String country) {
         String url = API_URL + "?country=" + country;
         try {
             University[] universities = restTemplate.getForObject(url, University[].class);
-            Map<String, List<String>> universitiesByCountries = new HashMap<>();
-            List<String> universityNames = Arrays.stream(universities).map(University::getName).collect(Collectors.toList());
-            universitiesByCountries.put(country, universityNames);
-            return universitiesByCountries;
+            return Arrays.stream(universities)
+                    .map(University::getName)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw new NotValidCountryException(country + " is not a valid country");
         }
