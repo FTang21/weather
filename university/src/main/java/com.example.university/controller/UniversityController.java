@@ -1,6 +1,8 @@
 package com.example.university.controller;
 
 import com.example.university.service.UniversityService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
@@ -22,7 +24,9 @@ public class UniversityController {
     };
 
     @GetMapping("/university")
-    public ResponseEntity<List<String>> getUniversitiesByCountries(@RequestParam(required = false) List<String> country) {
+    @ApiOperation(value = "Get Universities", notes = "Get Universities filter by Countries")
+    public ResponseEntity<List<String>> getUniversitiesByCountries(
+            @ApiParam(value = "Parameter to filter by given countries") @RequestParam(required = false) List<String> country) {
         if (country == null || country.isEmpty()) {
             return new ResponseEntity<>(
                     universityService.getAllUniversities(),
