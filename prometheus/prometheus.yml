@@ -1,0 +1,53 @@
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['host.docker.internal:9090']
+
+  - job_name: 'config'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: ['host.docker.internal:8100']
+        labels:
+          application: 'Config Application'
+
+  - job_name: 'university'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: [ 'host.docker.internal:9000' ]
+        labels:
+          application: 'University Application'
+
+  - job_name: 'school'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: [ 'host.docker.internal:9100' ]
+        labels:
+          application: 'School Application'
+
+  - job_name: 'security'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: [ 'host.docker.internal:9200' ]
+        labels:
+          application: 'Security Application'
+
+  - job_name: 'details'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: [ 'host.docker.internal:9400' ]
+        labels:
+          application: 'Details Application'
+
+  - job_name: 'search'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: [ 'host.docker.internal:9001' ]
+        labels:
+          application: 'Search Application'
