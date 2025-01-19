@@ -21,7 +21,7 @@ public class UniversityController {
     @Autowired
     public UniversityController(UniversityService universityService) {
         this.universityService = universityService;
-    };
+    }
 
     @GetMapping("/university")
     @ApiOperation(value = "Get Universities", notes = "Get Universities filter by Countries")
